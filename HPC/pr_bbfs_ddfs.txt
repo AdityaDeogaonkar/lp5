@@ -8,6 +8,7 @@ public:
 	vector<bool>visited;
 
 	void bfs(int i){
+	auto start=chrono::high_resolution_clock::now();
         queue<int> q;
         q.push(i);
         visited[i] = true;
@@ -22,9 +23,12 @@ public:
                     }
                 }
             }
+	auto end=chrono::high_resolution_clock::now();
+	cout<<"time taken :: "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<"ms"<<'\n';
         }
 
         void parallel_bfs(int i){
+	auto start=chrono::high_resolution_clock::now();
             queue<int> q;
             q.push(i);
             visited[i] = true;
@@ -44,12 +48,14 @@ public:
                                 visited[*j] = true;
                         }
                     }
-                
             }
+	auto end=chrono::high_resolution_clock::now();
+	cout<<"time taken :: "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<"ms"<<'\n';
         }
 
 
         void dfs(int i){
+	auto start=chrono::high_resolution_clock::now();
             stack<int> s;
             s.push(i);
             visited[i] = true;
@@ -65,9 +71,12 @@ public:
                     }
                 }  
             }
+	auto end=chrono::high_resolution_clock::now();
+	cout<<"time taken :: "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<"ms"<<'\n';
         }
 
         void parallel_dfs(int i){
+	auto start=chrono::high_resolution_clock::now();
             stack<int> s;
             s.push(i);
             visited[i] = true;
@@ -88,7 +97,9 @@ public:
                         }
                     }
             	}
-        	}
+			auto end=chrono::high_resolution_clock::now();
+	cout<<"time taken :: "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<"ms"<<'\n';
+       }
 
         void initialize_visited(){
             visited.assign(v,false);
@@ -104,9 +115,9 @@ int main() {
 	#endif
 	graph g;
 	g.initialize_visited();
-	auto start=chrono::high_resolution_clock::now();
+	g.bfs(0);
+	g.parallel_bfs(0);
+	g.dfs(0);
 	g.parallel_dfs(0);
-	auto end=chrono::high_resolution_clock::now();
-	cout<<"t_t  "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<'\n';
 
 }
