@@ -1,0 +1,112 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class graph{
+public:
+	int v=6,e=5;
+	vector<vector<int>>graph={{1},{0,2,3},{1,4,5},{1,4},{2,3},{2}};
+	vector<bool>visited;
+
+	void bfs(int i){
+        queue<int> q;
+        q.push(i);
+        visited[i] = true;
+		while(q.empty() != true){
+            int current = q.front();
+            q.pop();
+            cout << current << " ";
+            for(auto j = graph[current].begin(); j != graph[current].end();j++){
+                if(visited[*j] == false){
+                    q.push(*j);
+                    visited[*j] = true;
+                    }
+                }
+            }
+        }
+
+        void parallel_bfs(int i){
+            queue<int> q;
+            q.push(i);
+            visited[i] = true;
+
+            while(q.empty() != true){
+                
+                    int current = q.front();
+                    cout << current << " ";
+                    #pragma omp critical
+                        q.pop();
+                    
+                #pragma omp parallel for
+                    for(auto j = graph[current].begin(); j != graph[current].end();j++){
+                        if(visited[*j] == false){
+                            #pragma omp critical
+                                q.push(*j);
+                                visited[*j] = true;
+                        }
+                    }
+                
+            }
+        }
+
+
+        void dfs(int i){
+            stack<int> s;
+            s.push(i);
+            visited[i] = true;
+
+            while(s.empty() != true){
+                int current = s.top();
+                cout << current << " ";
+                s.pop();
+                for(auto j = graph[current].begin(); j != graph[current].end();j++){
+                    if(visited[*j] == false){
+                        s.push(*j);
+                        visited[*j] = true;
+                    }
+                }  
+            }
+        }
+
+        void parallel_dfs(int i){
+            stack<int> s;
+            s.push(i);
+            visited[i] = true;
+
+            while(s.empty() != true){
+                int current = s.top();
+                cout << current << " ";
+                #pragma omp critical
+                    s.pop();
+                #pragma omp parallel for
+                    for(auto j = graph[current].begin(); j != graph[current].end();j++){
+                        if(visited[*j] == false){
+                            #pragma omp critical
+                            {
+                                s.push(*j);
+                                visited[*j] = true;
+                            }
+                        }
+                    }
+            	}
+        	}
+
+        void initialize_visited(){
+            visited.assign(v,false);
+        }
+    };
+
+
+
+int main() {
+		#ifndef ONLINE_JUDGE 
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+	#endif
+	graph g;
+	g.initialize_visited();
+	auto start=chrono::high_resolution_clock::now();
+	g.parallel_dfs(0);
+	auto end=chrono::high_resolution_clock::now();
+	cout<<"t_t  "<<chrono::duration_cast<chrono::microseconds>(end-start).count()<<'\n';
+
+}
